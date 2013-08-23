@@ -25,7 +25,7 @@ Formtastic does), it only lightly wraps the existing Rails form tag helpers.
 ## Syntax ##
 
 ```haml
-= twitter_bootstrap_form_for @user, layout: 'vertical (default) OR horizontal OR inline', default_div_class: 'col-lg-10 (default)', role: 'form (default)' do |user|
+= twitter_bootstrap_form_for @user, layout: 'basic (default) OR horizontal OR inline', default_div_class: 'col-lg-10 (default)', role: 'form (default)' do |user|
 
   / wraps a section in a fieldset with the provided legend text
   = user.inputs 'Sign up', :class => 'sign_up' do
