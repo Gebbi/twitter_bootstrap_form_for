@@ -115,6 +115,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       label    = args.first.nil? ? '' : args.shift
       label_class = options[:label_class] || @options[:default_label_class]
       options.delete :label_class
+      add_on = nil
 
       self.div_wrapper(attribute, :class => 'form-group') do
         template.concat self.label(attribute, label, :class => label_class) if label
@@ -124,15 +125,18 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
         if options[:div_class].present?
           classes << options[:div_class]
         elsif @options[:default_div_class].present?
-          classes <<  @options[:default_div_class]
+          classes << @options[:default_div_class]
         end
-        classes << ('input-' + options.delete(:add_on).to_s) if options[:add_on]
+        if options[:add_on]
+          classes << ('input-group')
+          add_on = options.delete(:add_on).to_s
+        end
         template.concat template.content_tag(:div, :class => classes.join(' ')) {
-          block.call if block.present? and classes.include?('input-prepend')
+          block.call if block.present? and add_on == 'prepend'
           template.concat super(attribute, *(args << options))
-          template.concat error_span(attribute)
-          block.call if block.present? and classes.include?('input-append')
+          block.call if block.present? and add_on == 'append'
         }
+        template.concat error_span(attribute)
       end
     end
   end
