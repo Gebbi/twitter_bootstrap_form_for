@@ -139,7 +139,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
 
   TOGGLES.each do |toggle|
     define_method toggle do |attribute, *args, &block|
-      
+
       label       = args.first.nil? ? '' : args.shift
       target      = self.object_name.to_s + '_' + attribute.to_s
       label_attrs = toggle == :check_box ? { :for => target } : {}
@@ -172,7 +172,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def error_span(attribute, options = {})
-    options[:class] ||= 'help-inline'
+    options[:class] ||= 'help-block'
 
     template.content_tag(
       :span, self.errors_for(attribute),
