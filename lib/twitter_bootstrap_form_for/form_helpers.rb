@@ -10,11 +10,14 @@ module TwitterBootstrapFormFor::FormHelpers
         unless [:basic, :horizontal, :inline].include?(options[:layout])
           raise "Specified form layout #{options[:layout].to_s} is invalid. Must be one of :basic, :horizontal, or :inline."
         end
-        options[:default_toggle_style] = :stacked
+        options[:default_toggle_style] ||= :stacked
         if options[:layout] == :horizontal
           options[:default_div_class] ||= 'col-lg-10'
           options[:default_label_class] ||= 'col-lg-2 control-label'
+        elsif options[:layout] == :inline
+          options[:default_label_class] ||= 'sr-only'
         end
+        options[:default_label_class] ||= 'control-label'
         if options[:html].nil?
           options[:html] = {:role => 'form'}
           options[:html][:class] = "form-#{options[:layout]}" if options[:layout] != 'basic'
