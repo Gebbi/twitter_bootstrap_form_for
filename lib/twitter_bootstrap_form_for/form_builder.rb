@@ -59,7 +59,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       template.concat self.label(nil, label, :class => label_class) if label.present?
 
 			if @options[:layout] == :horizontal
-        html_class = label.present? ? @options[:default_div_class] : 'col-lg-offset-2 col-lg-10'
+        html_class = label.present? ? @options[:default_div_class] : 'col-lg-10'
       end
       template.concat template.content_tag(:div, :class => html_class) { block.call }
     end
@@ -71,7 +71,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   def actions(*args, &block)
     if @options[:layout] == :horizontal
       options  = args.extract_options!
-      options[:class] ||= 'col-lg-offset-2 col-lg-10'
+      options[:class] ||= 'col-lg-10'
       self.div_wrapper(:div, :class => 'form-group') do
         template.content_tag(:div, :class => options[:class], &block)
       end
@@ -128,15 +128,21 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
           classes << @options[:default_div_class]
         end
         if options[:add_on]
-          classes << ('input-group')
           add_on = options.delete(:add_on).to_s
+          template.concat template.content_tag(:div, :class => classes.join(' ')) {
+            template.concat template.content_tag(:div, :class => 'input-group') {
+              block.call if block.present? and add_on == 'prepend'
+              template.concat super(attribute, *(args << options))
+              block.call if block.present? and add_on == 'append'
+            }
+            template.concat error_span(attribute)
+          }
+        else
+          template.concat template.content_tag(:div, :class => classes.join(' ')) {
+            template.concat super(attribute, *(args << options))
+            template.concat error_span(attribute)
+          }
         end
-        template.concat template.content_tag(:div, :class => classes.join(' ')) {
-          block.call if block.present? and add_on == 'prepend'
-          template.concat super(attribute, *(args << options))
-          block.call if block.present? and add_on == 'append'
-        }
-        template.concat error_span(attribute)
       end
     end
   end
