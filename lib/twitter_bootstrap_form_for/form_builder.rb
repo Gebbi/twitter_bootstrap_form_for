@@ -49,7 +49,9 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
 
     # This set of toggles will conform to either the stacked or inline style
     options[:style] ||= @options[:default_toggle_style]
-    raise "Invalid style passed to toggles: #{options[:style].to_s}. Must be :stacked or :inline" unless [:stacked, :inline].include?(options[:style])
+    unless [:stacked, :inline].include?(options[:style])
+      raise "Invalid style passed to toggles: #{options[:style].to_s}. Must be :stacked or :inline"
+    end
     @toggles_style = options[:style]
 
     # Not necessary, but makes it convenient if we are using the horizontal form style
@@ -142,21 +144,38 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   end
 
   TOGGLES.each do |toggle|
+    simple_name = (toggle == :check_box) ? 'checkbox' : 'radio'
     define_method toggle do |attribute, *args, &block|
 
       label       = args.first.nil? ? '' : args.shift
       target      = self.object_name.to_s + '_' + attribute.to_s
       label_attrs = toggle == :check_box ? { :for => target } : {}
 
-      template.concat template.content_tag(:label, label_attrs) {
-        template.concat super(attribute, *args)
-        template.concat ' ' # give the input and span some room
-        template.concat template.content_tag(:span, label)
-      }
-      if toggle == :check_box
-        template.concat template.content_tag(:div, :class => "has-error") {
-          template.concat error_span(attribute)
-        } if errors_on?(attribute)
+      if @toggles_style == :inline
+        label_attrs[:class] = "#{simple_name}-inline"
+        template.concat template.content_tag(:label, label_attrs) {
+          template.concat super(attribute, *args)
+          template.concat ' ' # give the input and span some room
+          template.concat template.content_tag(:span, label)
+        }
+        if toggle == :check_box
+          template.concat template.content_tag(:div, :class => "has-error") {
+            template.concat error_span(attribute)
+          } if errors_on?(attribute)
+        end
+      else
+        template.content_tag(:div, :class => simple_name) {
+          template.concat template.content_tag(:label, label_attrs) {
+            template.concat super(attribute, *args)
+            template.concat ' ' # give the input and span some room
+            template.concat template.content_tag(:span, label)
+          }
+          if toggle == :check_box
+            template.concat template.content_tag(:div, :class => "has-error") {
+              template.concat error_span(attribute)
+            } if errors_on?(attribute)
+          end
+        }
       end
     end
   end
