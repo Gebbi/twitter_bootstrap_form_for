@@ -59,9 +59,11 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       template.concat self.label(nil, label, :class => label_class) if label.present?
 
 			if @options[:layout] == :horizontal
-        html_class = label.present? ? @options[:default_div_class] : 'col-lg-10'
+        classes = [@options[:default_div_class]]
+        classes.push(@options[:default_offset_class]) if label.blank?
+        div_class = classes.join(' ')
       end
-      template.concat template.content_tag(:div, :class => html_class) { block.call }
+      template.concat template.content_tag(:div, :class => div_class) { block.call }
     end
   end
 
@@ -71,9 +73,9 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   def actions(*args, &block)
     if @options[:layout] == :horizontal
       options  = args.extract_options!
-      options[:class] ||= 'col-lg-10'
+      div_class = [@options[:default_div_class], @options[:default_offset_class]].join(' ')
       self.div_wrapper(:div, :class => 'form-group') do
-        template.content_tag(:div, :class => options[:class], &block)
+        template.content_tag(:div, :class => div_class, &block)
       end
     else
       block.call
@@ -96,8 +98,15 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   #
   def inline(label = nil, &block)
     template.content_tag(:div, :class => 'form-group') do
-      template.concat template.content_tag(:label, label) if label.present?
-      template.concat template.content_tag(:div, :class => 'inline-controls') {
+      label_class = options[:label_class] || @options[:default_label_class]
+      classes = ['inline-controls']
+      if options[:div_class].present?
+        classes << options.delete(:div_class).to_s
+      elsif @options[:default_div_class].present?
+        classes << @options[:default_div_class]
+      end
+      template.concat template.content_tag(:label, label, :class => label_class) if label.present?
+      template.concat template.content_tag(:div, :class => classes.join(' ')) {
         template.fields_for(
           self.object_name,
           self.object,
