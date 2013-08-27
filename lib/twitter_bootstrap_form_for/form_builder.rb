@@ -95,17 +95,15 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   # to the supplied block.
   #
   def inline(label = nil, &block)
-    template.content_tag(:div) do
+    template.content_tag(:div, :class => 'form-group') do
       template.concat template.content_tag(:label, label) if label.present?
-      template.concat template.content_tag(:div, :class => 'input') {
-        template.content_tag(:div, :class => 'inline-inputs') do
-          template.fields_for(
-            self.object_name,
-            self.object,
-            self.options.merge(:builder => ActionView::Helpers::FormBuilder),
-            &block
-          )
-        end
+      template.concat template.content_tag(:div, :class => 'inline-controls') {
+        template.fields_for(
+          self.object_name,
+          self.object,
+          self.options.merge(:builder => ActionView::Helpers::FormBuilder),
+          &block
+        )
       }
     end
   end
@@ -125,7 +123,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
         options[:class] ||= 'form-control'
         classes = []
         if options[:div_class].present?
-          classes << options[:div_class]
+          classes << options.delete(:div_class).to_s
         elsif @options[:default_div_class].present?
           classes << @options[:default_div_class]
         end
