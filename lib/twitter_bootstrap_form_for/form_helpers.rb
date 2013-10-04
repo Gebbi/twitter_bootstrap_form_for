@@ -12,9 +12,9 @@ module TwitterBootstrapFormFor::FormHelpers
         end
         options[:default_toggle_style] ||= :stacked
         if options[:layout] == :horizontal
-          options[:default_div_class] ||= 'col-lg-10'
-          options[:default_label_class] ||= 'col-lg-2 control-label'
-          options[:default_offset_class] ||= 'col-lg-offset-2'
+          options[:default_div_class] ||= 'col-md-10'
+          options[:default_label_class] ||= 'col-md-2 control-label'
+          options[:default_offset_class] ||= 'col-md-offset-2'
         elsif options[:layout] == :inline
           options[:default_label_class] ||= 'sr-only'
         end
