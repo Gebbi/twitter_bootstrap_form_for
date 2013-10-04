@@ -19,10 +19,11 @@ module TwitterBootstrapFormFor::FormHelpers
           options[:default_label_class] ||= 'sr-only'
         end
         options[:default_label_class] ||= 'control-label'
-        if options[:html].nil?
-          options[:html] = {:role => 'form'}
-          options[:html][:class] = "form-#{options[:layout]}" if options[:layout] != 'basic'
-        end
+
+        options[:html] = {} if options[:html].nil?
+        options[:html][:role] = 'form'
+        options[:html][:class] = "form-#{options[:layout]}" if options[:layout] != 'basic'
+        
         options[:builder]  = TwitterBootstrapFormFor::FormBuilder
 
         # call the original method with our overridden options
