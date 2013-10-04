@@ -119,6 +119,9 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
 
   INPUTS.each do |input|
     define_method input do |attribute, *args, &block|
+      if input == :select then
+        raise 'oops'
+      end
 
       options  = args.extract_options!
       label    = args.first.nil? ? '' : args.shift
@@ -204,7 +207,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
     options[:id]    = _wrapper_id      attribute, options[:id]
     options[:class] = _wrapper_classes attribute, options[:class]
 
-    template.content_tag :div, attribute, options, &block
+    template.content_tag :div, options, &block
   end
 
   def error_span(attribute, options = {})
