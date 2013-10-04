@@ -141,14 +141,14 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
           template.concat template.content_tag(:div, :class => classes.join(' ')) {
             template.concat template.content_tag(:div, :class => 'input-group') {
               block.call if block.present? and add_on == 'prepend'
-              template.concat super(*(args << options))
+              #template.concat super(attribute, *(args << options))
               block.call if block.present? and add_on == 'append'
             }
             template.concat error_span(attribute)
           }
         else
           template.concat template.content_tag(:div, :class => classes.join(' ')) {
-            template.concat super(*(args << options))
+            #template.concat super(attribute, *(args << options))
             template.concat error_span(attribute)
           }
         end
