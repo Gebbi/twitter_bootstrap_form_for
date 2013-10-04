@@ -29,7 +29,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
   def inputs(legend = nil, options = {}, &block)
     template.content_tag(:fieldset, options) do
       template.concat template.content_tag(:legend, legend) unless legend.nil?
-      block.call
+      block.call options
     end
   end
 
