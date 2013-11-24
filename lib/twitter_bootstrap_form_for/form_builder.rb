@@ -140,9 +140,9 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
           add_on = options.delete(:add_on).to_s
           template.concat template.content_tag(:div, :class => classes.join(' ')) {
             template.concat template.content_tag(:div, :class => 'input-group') {
-              block.call if block.present? and add_on == 'prepend'
+              block.call if block.present? and add_on == :prepend
               template.concat super(attribute, *(args << options))
-              block.call if block.present? and add_on == 'append'
+              block.call if block.present? and add_on == :append
             }
             template.concat error_span(attribute)
           }
